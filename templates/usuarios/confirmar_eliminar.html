@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Eliminar Usuario — SkillHub{% endblock %}
+
+{% block content %}
+<div style="max-width:480px;margin:3rem auto;">
+  <div class="card" style="text-align:center;padding:2.5rem;">
+    <div style="font-size:2.5rem;margin-bottom:1rem;">⚠️</div>
+    <h2 style="font-family:var(--font-head);margin-bottom:.75rem;">¿Eliminar usuario?</h2>
+    <p style="color:var(--muted);margin-bottom:.5rem;">
+      Estás a punto de desactivar a:
+    </p>
+    <p style="font-size:1.1rem;font-weight:600;margin-bottom:.35rem;">{{ usuario.nombre }}</p>
+    <p style="color:var(--muted);font-size:.875rem;margin-bottom:2rem;">{{ usuario.email }}</p>
+    <p style="color:var(--muted);font-size:.82rem;margin-bottom:2rem;">
+      El usuario no se borrará de la base de datos, sólo se marcará como inactivo.
+    </p>
+    <div style="display:flex;gap:.75rem;justify-content:center;">
+      <form method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+      </form>
+      <a href="{% url 'usuarios:lista' %}" class="btn btn-ghost">Cancelar</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

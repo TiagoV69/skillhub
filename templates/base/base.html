@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}SkillHub{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0f14;
+      --surface:   #151820;
+      --card:      #1c2030;
+      --border:    #2a2f45;
+      --accent:    #5b8cff;
+      --accent2:   #a78bfa;
+      --success:   #34d399;
+      --danger:    #f87171;
+      --warning:   #fbbf24;
+      --text:      #e8eaf2;
+      --muted:     #7a80a0;
+      --font-head: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --radius:    12px;
+      --shadow:    0 4px 24px rgba(0,0,0,.45);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo {
+      font-family: var(--font-head);
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -.5px;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: .25rem; align-items: center; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .9rem;
+      font-weight: 500;
+      padding: .45rem .85rem;
+      border-radius: 8px;
+      transition: all .2s;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      background: rgba(91,140,255,.12);
+      color: var(--accent);
+    }
+
+    /* ── AUTH0 placeholder en nav ── */
+    .nav-auth {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+    /* Este div se llena con Auth0 */
+    #auth0-nav-widget {
+      font-size: .85rem;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      padding: .35rem .75rem;
+      border-radius: 8px;
+    }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .page-header h1 {
+      font-family: var(--font-head);
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -.5px;
+    }
+
+    /* ── BOTONES ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      padding: .55rem 1.2rem;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: .875rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: all .18s;
+    }
+    .btn-primary  { background: var(--accent); color: #fff; }
+    .btn-primary:hover  { background: #4a7bf0; transform: translateY(-1px); }
+    .btn-success  { background: var(--success); color: #0d1a14; }
+    .btn-success:hover  { opacity: .88; }
+    .btn-danger   { background: var(--danger);  color: #fff; }
+    .btn-danger:hover   { opacity: .88; }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-sm { padding: .35rem .8rem; font-size: .8rem; }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    /* ── TABLA ── */
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      font-family: var(--font-head);
+      font-size: .78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      padding: .75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background .15s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,.025); }
+    td { padding: .85rem 1rem; font-size: .9rem; }
+
+    /* ── BADGES ── */
+    .badge {
+      display: inline-block;
+      padding: .2rem .65rem;
+      border-radius: 99px;
+      font-size: .75rem;
+      font-weight: 600;
+    }
+    .badge-blue   { background: rgba(91,140,255,.18); color: var(--accent); }
+    .badge-purple { background: rgba(167,139,250,.18); color: var(--accent2); }
+    .badge-green  { background: rgba(52,211,153,.18); color: var(--success); }
+    .badge-red    { background: rgba(248,113,113,.18); color: var(--danger); }
+    .badge-yellow { background: rgba(251,191,36,.18);  color: var(--warning); }
+
+    /* ── FORMULARIO ── */
+    .form-grid { display: grid; gap: 1.25rem; }
+    .form-group { display: flex; flex-direction: column; gap: .4rem; }
+    .form-group label {
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: .9rem;
+      padding: .65rem .9rem;
+      transition: border .18s;
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(91,140,255,.12);
+    }
+    .form-group .errorlist {
+      list-style: none;
+      color: var(--danger);
+      font-size: .8rem;
+      margin-top: .2rem;
+    }
+
+    /* ── ALERTS / MESSAGES ── */
+    .messages { list-style: none; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: .5rem; }
+    .messages li {
+      padding: .75rem 1rem;
+      border-radius: 8px;
+      font-size: .875rem;
+      border-left: 3px solid;
+    }
+    .messages .success { background: rgba(52,211,153,.1); border-color: var(--success); color: var(--success); }
+    .messages .error   { background: rgba(248,113,113,.1); border-color: var(--danger);  color: var(--danger);  }
+    .messages .warning { background: rgba(251,191,36,.1);  border-color: var(--warning); color: var(--warning); }
+    .messages .info    { background: rgba(91,140,255,.1);  border-color: var(--accent);  color: var(--accent);  }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--muted);
+    }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; opacity: .4; }
+    .empty-state h3 { font-family: var(--font-head); margin-bottom: .5rem; color: var(--text); }
+
+    /* ── GRID CARDS ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+    .skill-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.35rem;
+      transition: border-color .2s, transform .2s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .skill-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .skill-card-title {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: .5rem;
+    }
+    .skill-card-meta {
+      font-size: .8rem;
+      color: var(--muted);
+      margin-top: .75rem;
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+
+    /* ── SEARCH BAR ── */
+    .search-bar {
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.75rem;
+      align-items: flex-end;
+    }
+    .search-bar input, .search-bar select {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: .875rem;
+      padding: .55rem .9rem;
+      outline: none;
+    }
+    .search-bar input:focus, .search-bar select:focus { border-color: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: .8rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 1rem; }
+      .container { padding: 1.5rem 1rem; }
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="{% url 'habilidades:lista' %}">Skill<span>Hub</span></a>
+  <div class="nav-links">
+    <a href="{% url 'habilidades:lista' %}">Habilidades</a>
+    <a href="{% url 'usuarios:lista' %}">Usuarios</a>
+  </div>
+  <div class="nav-auth">
+
+    <div id="auth0-nav-widget">
+      {% block auth_nav %}
+        <a href="#" style="color:var(--muted);text-decoration:none;font-size:.85rem;">
+          🔐 Auth0 pendiente
+        </a>
+      {% endblock %}
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+</div>
+
+<footer>
+  SkillHub &mdash; Sistema de Intercambio de Habilidades &bull; ITM &bull; Arquitectura de Software II
+</footer>
+
+</body>
+</html>

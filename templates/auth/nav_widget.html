@@ -1,0 +1,20 @@
+
+{% if request.session.user %}
+  <div style="display:flex;align-items:center;gap:.6rem;">
+    <img src="{{ request.session.user.picture }}"
+         alt="avatar"
+         style="width:32px;height:32px;border-radius:50%;border:2px solid var(--accent);">
+    <div style="line-height:1.2;">
+      <div style="font-size:.85rem;font-weight:600;">{{ request.session.user.name }}</div>
+      {% if request.session.user.etiqueta %}
+        <div style="font-size:.72rem;color:var(--accent);">{{ request.session.user.etiqueta }}</div>
+      {% endif %}
+    </div>
+    <a href="{% url 'auth0login:logout' %}"
+       class="btn btn-ghost btn-sm">Salir</a>
+  </div>
+{% else %}
+  <a href="{% url 'auth0login:login' %}" class="btn btn-primary btn-sm">
+    Iniciar sesión
+  </a>
+{% endif %}

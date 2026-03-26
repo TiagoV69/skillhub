@@ -1,0 +1,64 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Usuarios — SkillHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>👥 Usuarios</h1>
+  <a href="{% url 'usuarios:crear' %}" class="btn btn-primary">+ Nuevo usuario</a>
+</div>
+
+{% if usuarios %}
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Habilidades</th>
+        <th>Estado</th>
+        <th>Registro</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in usuarios %}
+      <tr>
+        <td style="color:var(--muted);">{{ u.id_usuario }}</td>
+        <td style="font-weight:600;">{{ u.nombre }}</td>
+        <td style="color:var(--muted);">{{ u.email }}</td>
+        <td>
+          <span class="badge badge-blue">{{ u.habilidades.count }}</span>
+        </td>
+        <td>
+          {% if u.activo %}
+            <span class="badge badge-green">Activo</span>
+          {% else %}
+            <span class="badge badge-red">Inactivo</span>
+          {% endif %}
+        </td>
+        <td style="color:var(--muted);font-size:.82rem;">
+          {{ u.fecha_registro|date:"d M Y" }}
+        </td>
+        <td>
+          <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+            <a href="{% url 'usuarios:detalle' u.pk %}" class="btn btn-ghost btn-sm">Ver</a>
+            <a href="{% url 'usuarios:editar' u.pk %}" class="btn btn-primary btn-sm">Editar</a>
+            <a href="{% url 'usuarios:eliminar' u.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="icon">👤</div>
+  <h3>No hay usuarios registrados</h3>
+  <p style="margin:.5rem 0 1.5rem;">Comienza creando el primer usuario de la plataforma.</p>
+  <a href="{% url 'usuarios:crear' %}" class="btn btn-primary">Crear usuario</a>
+</div>
+{% endif %}
+{% endblock %}

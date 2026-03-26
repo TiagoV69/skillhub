@@ -1,0 +1,90 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{{ usuario.nombre }} — SkillHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <p style="color:var(--muted);font-size:.85rem;margin-bottom:.25rem;">
+      <a href="{% url 'usuarios:lista' %}" style="color:var(--muted);text-decoration:none;">Usuarios</a>
+      &rsaquo; {{ usuario.nombre }}
+    </p>
+    <h1>{{ usuario.nombre }}</h1>
+  </div>
+  <div style="display:flex;gap:.5rem;">
+    <a href="{% url 'usuarios:editar' usuario.pk %}" class="btn btn-primary">Editar</a>
+    <a href="{% url 'usuarios:eliminar' usuario.pk %}" class="btn btn-danger">Eliminar</a>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 2fr;gap:1.25rem;align-items:start;">
+
+  <div class="card">
+    <h3 style="font-family:var(--font-head);margin-bottom:1rem;font-size:1rem;">Información</h3>
+    <div style="display:flex;flex-direction:column;gap:.75rem;">
+      <div>
+        <div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Email</div>
+        <div>{{ usuario.email }}</div>
+      </div>
+      <div>
+        <div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Estado</div>
+        <div>
+          {% if usuario.activo %}
+            <span class="badge badge-green">Activo</span>
+          {% else %}
+            <span class="badge badge-red">Inactivo</span>
+          {% endif %}
+        </div>
+      </div>
+      <div>
+        <div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Registro</div>
+        <div>{{ usuario.fecha_registro|date:"d M Y, H:i" }}</div>
+      </div>
+      {% if usuario.descripcion %}
+      <div>
+        <div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem;">Descripción</div>
+        <div style="color:var(--muted);">{{ usuario.descripcion }}</div>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+        <h3 style="font-family:var(--font-head);font-size:1rem;">
+          Habilidades publicadas
+          <span class="badge badge-blue" style="margin-left:.5rem;">{{ habilidades.count }}</span>
+        </h3>
+        <a href="{% url 'habilidades:crear' %}" class="btn btn-ghost btn-sm">+ Añadir</a>
+      </div>
+
+      {% if habilidades %}
+        <div style="display:flex;flex-direction:column;gap:.75rem;">
+          {% for h in habilidades %}
+          <div style="padding:.85rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;">
+              <div>
+                <a href="{% url 'habilidades:detalle' h.pk %}"
+                   style="font-weight:600;color:var(--text);text-decoration:none;">
+                  {{ h.titulo }}
+                </a>
+                <div style="font-size:.8rem;color:var(--muted);margin-top:.2rem;">
+                  {{ h.categoria }}
+                </div>
+              </div>
+              <span class="badge badge-purple">{{ h.get_nivel_display }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p style="color:var(--muted);text-align:center;padding:1.5rem 0;">
+          Aún no ha publicado habilidades.
+        </p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

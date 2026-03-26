@@ -1,0 +1,54 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{{ accion }} Usuario — SkillHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <p style="color:var(--muted);font-size:.85rem;margin-bottom:.25rem;">
+      <a href="{% url 'usuarios:lista' %}" style="color:var(--muted);text-decoration:none;">Usuarios</a>
+      &rsaquo; {{ accion }}
+    </p>
+    <h1>{{ accion }} Usuario</h1>
+  </div>
+</div>
+
+<div style="max-width:560px;">
+  <div class="card">
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-grid">
+
+        {% for field in form %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <ul class="errorlist">
+              {% for error in field.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+          {% if field.help_text %}
+            <small style="color:var(--muted);font-size:.78rem;">{{ field.help_text }}</small>
+          {% endif %}
+        </div>
+        {% endfor %}
+
+        {% if form.non_field_errors %}
+          <div style="color:var(--danger);font-size:.85rem;padding:.5rem;background:rgba(248,113,113,.08);border-radius:8px;">
+            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+
+        <div style="display:flex;gap:.75rem;margin-top:.5rem;">
+          <button type="submit" class="btn btn-primary">{{ accion }} Usuario</button>
+          <a href="{% url 'usuarios:lista' %}" class="btn btn-ghost">Cancelar</a>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
