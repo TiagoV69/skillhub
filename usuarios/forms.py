@@ -1,15 +1,16 @@
 from django import forms
+
 from .models import Usuario
 
 
 class UsuarioForm(forms.ModelForm):
     contrasena = forms.CharField(
-        widget=forms.PasswordInput(attrs={'placeholder': 'Contraseña'}),
-        label='Contraseña'
+        widget=forms.PasswordInput(attrs={'placeholder': 'Contrasena'}),
+        label='Contrasena',
     )
     confirmar_contrasena = forms.CharField(
-        widget=forms.PasswordInput(attrs={'placeholder': 'Confirmar contraseña'}),
-        label='Confirmar contraseña'
+        widget=forms.PasswordInput(attrs={'placeholder': 'Confirmar contrasena'}),
+        label='Confirmar contrasena',
     )
 
     class Meta:
@@ -18,7 +19,7 @@ class UsuarioForm(forms.ModelForm):
         widgets = {
             'nombre': forms.TextInput(attrs={'placeholder': 'Nombre completo'}),
             'email': forms.EmailInput(attrs={'placeholder': 'correo@ejemplo.com'}),
-            'descripcion': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Cuéntanos sobre ti...'}),
+            'descripcion': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Cuentanos sobre ti...'}),
         }
 
     def clean(self):
@@ -26,7 +27,7 @@ class UsuarioForm(forms.ModelForm):
         c1 = cleaned_data.get('contrasena')
         c2 = cleaned_data.get('confirmar_contrasena')
         if c1 and c2 and c1 != c2:
-            raise forms.ValidationError('Las contraseñas no coinciden.')
+            raise forms.ValidationError('Las contrasenas no coinciden.')
         return cleaned_data
 
     def save(self, commit=True):
@@ -39,8 +40,6 @@ class UsuarioForm(forms.ModelForm):
 
 
 class UsuarioEditForm(forms.ModelForm):
-    """Formulario de edición sin campo de contraseña obligatorio."""
-
     class Meta:
         model = Usuario
         fields = ['nombre', 'email', 'descripcion', 'activo']

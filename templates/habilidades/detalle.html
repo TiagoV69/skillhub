@@ -1,6 +1,6 @@
 {% extends 'base/base.html' %}
 
-{% block title %}{{ habilidad.titulo }} — SkillHub{% endblock %}
+{% block title %}{{ habilidad.titulo }} | SkillHub{% endblock %}
 
 {% block content %}
 <div class="page-header">
@@ -18,24 +18,21 @@
 </div>
 
 <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.25rem;align-items:start;">
-
   <div class="card">
     <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.25rem;">
-      <span class="badge badge-blue">{{ habilidad.categoria }}</span>
+      <span class="badge badge-blue">{{ habilidad.categoria|default:"General" }}</span>
       {% if habilidad.nivel == 'basico' %}
         <span class="badge badge-green">{{ habilidad.get_nivel_display }}</span>
       {% elif habilidad.nivel == 'intermedio' %}
         <span class="badge badge-yellow">{{ habilidad.get_nivel_display }}</span>
-      {% elif habilidad.nivel == 'avanzado' %}
-        <span class="badge badge-purple">{{ habilidad.get_nivel_display }}</span>
       {% else %}
-        <span class="badge badge-red">{{ habilidad.get_nivel_display }}</span>
+        <span class="badge badge-purple">{{ habilidad.get_nivel_display }}</span>
       {% endif %}
     </div>
     <h3 style="font-family:var(--font-head);font-size:1rem;color:var(--muted);margin-bottom:.5rem;">
-      DESCRIPCIÓN
+      DESCRIPCION
     </h3>
-    <p style="line-height:1.75;">{{ habilidad.descripcion }}</p>
+    <p style="line-height:1.75;">{{ habilidad.descripcion|default:"Sin descripcion disponible." }}</p>
   </div>
 
   <div style="display:flex;flex-direction:column;gap:1.25rem;">
@@ -44,14 +41,13 @@
       <div style="display:flex;flex-direction:column;gap:.75rem;">
         <div>
           <div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Publicado por</div>
-          <a href="{% url 'usuarios:detalle' habilidad.id_usuario.pk %}"
-             style="color:var(--accent);text-decoration:none;font-weight:600;">
+          <a href="{% url 'usuarios:detalle' habilidad.id_usuario.pk %}" style="color:var(--accent);text-decoration:none;font-weight:600;">
             {{ habilidad.id_usuario.nombre }}
           </a>
         </div>
         <div>
           <div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Disponibilidad</div>
-          <div>{{ habilidad.disponibilidad }}</div>
+          <div>{{ habilidad.disponibilidad|default:"Por definir" }}</div>
         </div>
         <div>
           <div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Publicado el</div>
@@ -62,14 +58,14 @@
 
     <div class="card" style="text-align:center;padding:1.5rem;">
       <p style="color:var(--muted);font-size:.85rem;margin-bottom:1rem;">
-        ¿Te interesa esta habilidad?
+        Te interesa esta habilidad?
       </p>
-      {# El compañero habilita este botón cuando Auth0 esté activo #}
-      <button class="btn btn-primary" style="width:100%;opacity:.5;cursor:not-allowed;" disabled>
-        🔐 Iniciar sesión para solicitar
-      </button>
+      {% if request.session.user %}
+        <a href="{% url 'usuarios:lista' %}" class="btn btn-primary" style="width:100%;">Continuar con el intercambio</a>
+      {% else %}
+        <a href="{% url 'usuarios:login' %}" class="btn btn-primary" style="width:100%;">Iniciar sesion para solicitar</a>
+      {% endif %}
     </div>
   </div>
-
 </div>
 {% endblock %}

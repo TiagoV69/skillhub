@@ -8,6 +8,7 @@ from django.contrib import messages
 from .models import Usuario
 from .forms import UsuarioForm, UsuarioEditForm
 
+
 oauth = OAuth()
 
 oauth.register(
@@ -29,7 +30,7 @@ def login(request):
 def callback(request):
     token = oauth.auth0.authorize_access_token(request)
     request.session["user"] = token
-    return redirect(request.build_absolute_uri(reverse("habilidades:lista")))
+    return redirect(request.build_absolute_uri(reverse("usuario:index")))
 
 
 def logout(request):
@@ -59,12 +60,17 @@ def index(request):
 
 def lista_usuarios(request):
     """Listar todos los usuarios (Read)."""
+    if not request.session.get("user"):
+        return redirect("usuarios:login")
     usuarios = Usuario.objects.filter(activo=True).order_by('-fecha_registro')
     return render(request, 'usuarios/lista.html', {'usuarios': usuarios})
 
 
 def detalle_usuario(request, pk):
     """Ver detalle de un usuario (Read)."""
+    if not request.session.get("user"):
+        return redirect("usuarios:login")
+    
     usuario = get_object_or_404(Usuario, pk=pk)
     habilidades = usuario.habilidades.all()
     return render(request, 'usuarios/detalle.html', {
@@ -75,6 +81,9 @@ def detalle_usuario(request, pk):
 
 def crear_usuario(request):
     """Crear un nuevo usuario (Create)."""
+    if not request.session.get("user"):
+        return redirect("usuarios:login")
+    
     if request.method == 'POST':
         form = UsuarioForm(request.POST)
         if form.is_valid():
@@ -90,6 +99,9 @@ def crear_usuario(request):
 
 def editar_usuario(request, pk):
     """Editar un usuario existente (Update)."""
+    if not request.session.get("user"):
+        return redirect("usuarios:login")
+    
     usuario = get_object_or_404(Usuario, pk=pk)
     if request.method == 'POST':
         form = UsuarioEditForm(request.POST, instance=usuario)
@@ -110,6 +122,9 @@ def editar_usuario(request, pk):
 
 def eliminar_usuario(request, pk):
     """Eliminar (desactivar) un usuario (Delete - soft delete)."""
+    if not request.session.get("user"):
+        return redirect("usuarios:login")
+    
     usuario = get_object_or_404(Usuario, pk=pk)
     if request.method == 'POST':
         # Soft delete: se marca como inactivo, no se borra de la DB

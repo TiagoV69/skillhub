@@ -1,20 +1,28 @@
-
 {% if request.session.user %}
   <div style="display:flex;align-items:center;gap:.6rem;">
-    <img src="{{ request.session.user.picture }}"
-         alt="avatar"
-         style="width:32px;height:32px;border-radius:50%;border:2px solid var(--accent);">
+    {% if request.session.user.userinfo.picture %}
+      <img
+        src="{{ request.session.user.userinfo.picture }}"
+        alt="{{ request.session.user.userinfo.name }}"
+        style="width:32px;height:32px;border-radius:50%;border:2px solid var(--accent);"
+      >
+    {% else %}
+      <div style="width:32px;height:32px;border-radius:50%;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:.75rem;font-weight:700;">
+        SH
+      </div>
+    {% endif %}
     <div style="line-height:1.2;">
-      <div style="font-size:.85rem;font-weight:600;">{{ request.session.user.name }}</div>
-      {% if request.session.user.etiqueta %}
-        <div style="font-size:.72rem;color:var(--accent);">{{ request.session.user.etiqueta }}</div>
-      {% endif %}
+      <div style="font-size:.85rem;font-weight:600;">
+        {{ request.session.user.userinfo.name|default:"Miembro SkillHub" }}
+      </div>
+      <div style="font-size:.72rem;color:var(--muted);">
+        Sesion activa
+      </div>
     </div>
-    <a href="{% url 'auth0login:logout' %}"
-       class="btn btn-ghost btn-sm">Salir</a>
+    <a href="{% url 'usuarios:logout' %}" class="btn btn-ghost btn-sm">Salir</a>
   </div>
 {% else %}
-  <a href="{% url 'auth0login:login' %}" class="btn btn-primary btn-sm">
-    Iniciar sesión
+  <a href="{% url 'usuarios:login' %}" class="btn btn-primary btn-sm">
+    Iniciar sesion
   </a>
 {% endif %}

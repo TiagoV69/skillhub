@@ -1,16 +1,326 @@
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Auth0 Example</title>
-  </head>
-  <body>
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}SkillHub | Intercambia conocimiento{% endblock %}
+
+{% block extra_head %}
+<style>
+  .hero-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(320px, .9fr);
+    gap: 1.5rem;
+    align-items: stretch;
+  }
+  .hero-card {
+    position: relative;
+    overflow: hidden;
+    padding: 2.4rem;
+    background:
+      radial-gradient(circle at top left, rgba(91,140,255,.22), transparent 32%),
+      radial-gradient(circle at bottom right, rgba(52,211,153,.16), transparent 28%),
+      linear-gradient(135deg, #171b27 0%, #11131a 100%);
+  }
+  .hero-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 12% 18%, rgba(255,255,255,.8) 0 1.1px, transparent 1.6px),
+      radial-gradient(circle at 22% 38%, rgba(91,140,255,.55) 0 1.3px, transparent 1.8px),
+      radial-gradient(circle at 76% 16%, rgba(255,255,255,.58) 0 1.25px, transparent 1.9px),
+      radial-gradient(circle at 64% 14%, rgba(52,211,153,.45) 0 1.3px, transparent 1.9px),
+      radial-gradient(circle at 82% 68%, rgba(91,140,255,.28) 0 1.7px, transparent 2.1px),
+      radial-gradient(circle at 58% 76%, rgba(255,255,255,.36) 0 1.1px, transparent 1.6px);
+    opacity: .9;
+    pointer-events: none;
+  }
+  .hero-card::after {
+    content: "";
+    position: absolute;
+    inset: auto -100px -100px auto;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(91,140,255,.22), transparent 68%);
+    pointer-events: none;
+  }
+  .hero-header {
+    position: relative;
+    z-index: 1;
+    min-height: 118px;
+    margin-bottom: .35rem;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .35rem .85rem;
+    border-radius: 999px;
+    border: 1px solid rgba(91,140,255,.24);
+    background: rgba(91,140,255,.08);
+    color: #c8d7ff;
+    font-size: .78rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .hero-logo {
+    position: absolute;
+    top: -.15rem;
+    right: 0;
+    width: 110px;
+    height: 110px;
+    margin: 0;
+    filter: drop-shadow(0 16px 26px rgba(22, 34, 72, .42));
+  }
+  .hero-title {
+    position: relative;
+    z-index: 1;
+    font-family: var(--font-head);
+    font-size: clamp(2.2rem, 6vw, 4.4rem);
+    line-height: .98;
+    letter-spacing: -.04em;
+    max-width: 9.5ch;
+  }
+  .hero-copy {
+    position: relative;
+    z-index: 1;
+    max-width: 54ch;
+    color: #c7cede;
+    margin: 1rem 0 0;
+    font-size: 1rem;
+  }
+  .hero-actions {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .8rem;
+    align-items: center;
+    margin-top: 1.4rem;
+  }
+  .hero-cta {
+    padding: .72rem 1.08rem;
+    font-size: .84rem;
+    border-radius: 10px;
+  }
+  .side-stack {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .session-card {
+    position: relative;
+    overflow: hidden;
+    padding: 1.7rem;
+    display: grid;
+    gap: 1.2rem;
+    background:
+      radial-gradient(circle at top right, rgba(91,140,255,.14), transparent 32%),
+      linear-gradient(180deg, rgba(30,35,53,.98), rgba(25,28,42,.98));
+  }
+  .session-card::after {
+    content: "";
+    position: absolute;
+    inset: auto auto -88px -30px;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(52,211,153,.08), transparent 66%);
+    pointer-events: none;
+  }
+  .session-head {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+  }
+  .session-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(91,140,255,.15), rgba(52,211,153,.18));
+    border: 1px solid rgba(91,140,255,.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .session-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .session-name {
+    position: relative;
+    z-index: 1;
+    font-family: var(--font-head);
+    font-size: 1.15rem;
+  }
+  .session-copy {
+    position: relative;
+    z-index: 1;
+    color: var(--muted);
+    font-size: .92rem;
+    line-height: 1.72;
+  }
+  .session-action {
+    position: relative;
+    z-index: 1;
+    align-self: flex-start;
+    padding: .72rem 1.15rem;
+    font-size: .84rem;
+    border-radius: 10px;
+  }
+  .session-divider {
+    position: relative;
+    z-index: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(91,140,255,.24), rgba(255,255,255,.04));
+    margin: .15rem 0 .3rem;
+  }
+  .feature-list {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 1.05rem;
+  }
+  .feature-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: .8rem;
+    align-items: start;
+  }
+  .feature-item strong {
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(91,140,255,.12);
+    border: 1px solid rgba(91,140,255,.24);
+    color: var(--accent);
+    font-family: var(--font-head);
+  }
+  .feature-item p {
+    color: var(--muted);
+    font-size: .9rem;
+  }
+  @media (max-width: 900px) {
+    .hero-shell {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 640px) {
+    .hero-card,
+    .session-card {
+      padding: 1.4rem;
+    }
+    .hero-header {
+      min-height: 96px;
+    }
+    .hero-logo {
+      width: 84px;
+      height: 84px;
+      top: 0;
+      right: -.15rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero-shell">
+  <article class="card hero-card">
+    <div class="hero-header">
+      <div class="hero-badge">Comunidad de aprendizaje colaborativo</div>
+      <img class="hero-logo" src="{% static 'branding/skillhub-mark.svg' %}" alt="SkillHub">
+    </div>
+
+    <h1 class="hero-title">Intercambia habilidades, crea conexiones reales.</h1>
+    <p class="hero-copy">
+      SkillHub conecta personas que quieren ensenar y aprender en un mismo espacio.
+      Publica lo que sabes, descubre nuevas habilidades y organiza intercambios con tu comunidad.
+    </p>
+
     {% if session %}
-    <h1>Welcome {{ session.userinfo.name }}!</h1>
-    <p><a href="{% url 'usuarios:logout' %}">Logout</a></p>
-    <div><pre>{{ pretty }}</pre></div>
-    {% else %}
-    <h1>Welcome Guest</h1>
-    <p><a href="{% url 'usuarios:login' %}">Login</a></p>
+      <div class="hero-actions">
+        <a href="{% url 'habilidades:lista' %}" class="btn btn-primary hero-cta">Explorar habilidades</a>
+        <a href="{% url 'usuarios:logout' %}" class="btn btn-ghost">Cerrar sesion</a>
+      </div>
     {% endif %}
-  </body>
-</html>
+  </article>
+
+  <div class="side-stack">
+    <section class="card session-card">
+      {% if session %}
+        <div class="session-head">
+          <div class="session-avatar">
+            {% if session.userinfo.picture %}
+              <img src="{{ session.userinfo.picture }}" alt="{{ session.userinfo.name }}">
+            {% else %}
+              <img src="{% static 'branding/skillhub-mark.svg' %}" alt="SkillHub">
+            {% endif %}
+          </div>
+          <div>
+            <div class="session-name">{{ session.userinfo.name|default:"Miembro SkillHub" }}</div>
+            <div class="session-copy">Tu espacio ya esta listo para descubrir nuevas oportunidades de aprendizaje y compartir lo que sabes.</div>
+          </div>
+        </div>
+
+        <a href="{% url 'habilidades:crear' %}" class="btn btn-primary session-action">Publicar una habilidad</a>
+        <a href="{% url 'usuarios:lista' %}" class="btn btn-ghost session-action" style="margin-top:-.35rem;">Ver comunidad</a>
+        <div class="session-divider"></div>
+
+        <div class="feature-list">
+          <div class="feature-item">
+            <strong>1</strong>
+            <div>
+              <div style="font-weight:600;">Comparte lo que dominas</div>
+              <p>Publica habilidades con una descripcion clara y disponibilidad para conectar con personas interesadas.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <strong>2</strong>
+            <div>
+              <div style="font-weight:600;">Explora nuevos intereses</div>
+              <p>Encuentra perfiles y temas que encajen con lo que quieres aprender en este momento.</p>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="session-name">Accede a tu espacio</div>
+        <div class="session-copy">
+          Entra para descubrir personas con intereses afines, publicar tus habilidades y empezar a construir nuevos intercambios.
+        </div>
+
+        <a href="{% url 'usuarios:login' %}" class="btn btn-primary session-action">Entrar</a>
+        <div class="session-divider"></div>
+
+        <div class="feature-list">
+          <div class="feature-item">
+            <strong>1</strong>
+            <div>
+              <div style="font-weight:600;">Encuentra talento cercano</div>
+              <p>Explora una comunidad donde aprender y enseñar se siente simple, directo y util.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <strong>2</strong>
+            <div>
+              <div style="font-weight:600;">Convierte ideas en conexiones</div>
+              <p>Desde idiomas hasta tecnologia, cada habilidad puede abrir una nueva colaboracion.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <strong>3</strong>
+            <div>
+              <div style="font-weight:600;">Empieza en pocos pasos</div>
+              <p>Crea tu espacio, comparte lo que sabes y empieza a participar en la comunidad.</p>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </section>
+  </div>
+</section>
+{% endblock %}

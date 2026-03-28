@@ -6,6 +6,9 @@ from .forms import HabilidadForm
 
 def lista_habilidades(request):
     """Listar todas las habilidades con filtros (Read)."""
+    if not request.session.get("user"):
+        return redirect("usuarios:login")
+    
     habilidades = Habilidad.objects.all().order_by('-fecha_pub')
 
     # Filtros
@@ -33,12 +36,18 @@ def lista_habilidades(request):
 
 def detalle_habilidad(request, pk):
     """Ver detalle de una habilidad (Read)."""
+    if not request.session.get("user"):
+        return redirect("usuarios:login")
+    
     habilidad = get_object_or_404(Habilidad, pk=pk)
     return render(request, 'habilidades/detalle.html', {'habilidad': habilidad})
 
 
 def crear_habilidad(request):
     """Crear una nueva habilidad (Create)."""
+    if not request.session.get("user"):
+        return redirect("usuarios:login")
+    
     if request.method == 'POST':
         form = HabilidadForm(request.POST)
         if form.is_valid():
@@ -54,6 +63,9 @@ def crear_habilidad(request):
 
 def editar_habilidad(request, pk):
     """Editar una habilidad (Update)."""
+    if not request.session.get("user"):
+        return redirect("usuarios:login")
+    
     habilidad = get_object_or_404(Habilidad, pk=pk)
     if request.method == 'POST':
         form = HabilidadForm(request.POST, instance=habilidad)
@@ -74,6 +86,9 @@ def editar_habilidad(request, pk):
 
 def eliminar_habilidad(request, pk):
     """Eliminar una habilidad (Delete)."""
+    if not request.session.get("user"):
+        return redirect("usuarios:login")
+    
     habilidad = get_object_or_404(Habilidad, pk=pk)
     if request.method == 'POST':
         titulo = habilidad.titulo

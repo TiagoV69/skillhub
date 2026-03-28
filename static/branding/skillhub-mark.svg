@@ -1,0 +1,24 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="skillhubGradient" x1="38" y1="28" x2="212" y2="222" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5B8CFF"/>
+      <stop offset="0.55" stop-color="#7B7FF2"/>
+      <stop offset="1" stop-color="#34D399"/>
+    </linearGradient>
+    <linearGradient id="skillhubPanel" x1="64" y1="46" x2="192" y2="210" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#101522"/>
+      <stop offset="1" stop-color="#182133"/>
+    </linearGradient>
+  </defs>
+  <rect x="28" y="28" width="200" height="200" rx="56" fill="url(#skillhubPanel)"/>
+  <path d="M128 60C95.8 60 69.8 86 69.8 118.2V138C69.8 170.2 95.8 196.2 128 196.2C160.2 196.2 186.2 170.2 186.2 138V118.2C186.2 86 160.2 60 128 60Z" fill="url(#skillhubGradient)" fill-opacity="0.12"/>
+  <path d="M128 75L167 97.5V142.5L128 165L89 142.5V97.5L128 75Z" stroke="url(#skillhubGradient)" stroke-width="12" stroke-linejoin="round"/>
+  <circle cx="128" cy="75" r="12" fill="#5B8CFF"/>
+  <circle cx="167" cy="97.5" r="12" fill="#7B7FF2"/>
+  <circle cx="167" cy="142.5" r="12" fill="#34D399"/>
+  <circle cx="128" cy="165" r="12" fill="#5B8CFF"/>
+  <circle cx="89" cy="142.5" r="12" fill="#7B7FF2"/>
+  <circle cx="89" cy="97.5" r="12" fill="#34D399"/>
+  <path d="M110 110L128 128L146 110" stroke="#F4F7FF" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M128 128V153" stroke="#F4F7FF" stroke-width="10" stroke-linecap="round"/>
+</svg>
