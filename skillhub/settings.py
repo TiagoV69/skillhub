@@ -1,10 +1,15 @@
 import os
 from pathlib import Path
-from dotenv import load_dotenv
-
-load_dotenv()
+from dotenv import load_dotenv, find_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+ENV_FILE = find_dotenv()
+if ENV_FILE:
+    load_dotenv(ENV_FILE)
+    
+
+TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-dev-key-cambiar-en-produccion')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
@@ -38,7 +43,7 @@ ROOT_URLCONF = 'skillhub.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -85,3 +90,8 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+AUTH0_DOMAIN = os.environ.get("AUTH0_DOMAIN")
+AUTH0_CLIENT_ID = os.environ.get("AUTH0_CLIENT_ID")
+AUTH0_CLIENT_SECRET = os.environ.get("AUTH0_CLIENT_SECRET")

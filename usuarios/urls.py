@@ -9,4 +9,8 @@ urlpatterns = [
     path('<int:pk>/', views.detalle_usuario, name='detalle'),
     path('<int:pk>/editar/', views.editar_usuario, name='editar'),
     path('<int:pk>/eliminar/', views.eliminar_usuario, name='eliminar'),
+    path('login', views.login, name='login'),
+    path('logout', views.logout, name='logout'),
+    path('callback', views.callback, name='callback'),
+    path('auth-home', views.index, name='index'),
 ]
