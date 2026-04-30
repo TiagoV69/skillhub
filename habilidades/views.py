@@ -3,28 +3,27 @@ from django.contrib import messages
 from .models import Habilidad
 from .forms import HabilidadForm
 
+# Constante para evitar duplicacion (correccion del SonarQube :))
+LOGIN_REDIRECT = "usuarios:login"
 
 def lista_habilidades(request):
     """Listar todas las habilidades con filtros (Read)."""
     if not request.session.get("user"):
-        return redirect("usuarios:login")
+        return redirect(LOGIN_REDIRECT)
+    
     
     habilidades = Habilidad.objects.all().order_by('-fecha_pub')
-
     # Filtros
     categoria = request.GET.get('categoria', '')
     nivel = request.GET.get('nivel', '')
     busqueda = request.GET.get('q', '')
-
     if categoria:
         habilidades = habilidades.filter(categoria__icontains=categoria)
     if nivel:
         habilidades = habilidades.filter(nivel=nivel)
     if busqueda:
         habilidades = habilidades.filter(titulo__icontains=busqueda)
-
     categorias = Habilidad.objects.values_list('categoria', flat=True).distinct().order_by('categoria')
-
     return render(request, 'habilidades/lista.html', {
         'habilidades': habilidades,
         'categorias': categorias,
@@ -33,21 +32,17 @@ def lista_habilidades(request):
         'busqueda': busqueda,
     })
 
-
 def detalle_habilidad(request, pk):
     """Ver detalle de una habilidad (Read)."""
     if not request.session.get("user"):
-        return redirect("usuarios:login")
-    
+        return redirect(LOGIN_REDIRECT)
     habilidad = get_object_or_404(Habilidad, pk=pk)
     return render(request, 'habilidades/detalle.html', {'habilidad': habilidad})
-
 
 def crear_habilidad(request):
     """Crear una nueva habilidad (Create)."""
     if not request.session.get("user"):
-        return redirect("usuarios:login")
-    
+        return redirect(LOGIN_REDIRECT)
     if request.method == 'POST':
         form = HabilidadForm(request.POST)
         if form.is_valid():
@@ -60,12 +55,10 @@ def crear_habilidad(request):
         form = HabilidadForm()
     return render(request, 'habilidades/form.html', {'form': form, 'accion': 'Publicar'})
 
-
 def editar_habilidad(request, pk):
     """Editar una habilidad (Update)."""
     if not request.session.get("user"):
-        return redirect("usuarios:login")
-    
+        return redirect(LOGIN_REDIRECT)
     habilidad = get_object_or_404(Habilidad, pk=pk)
     if request.method == 'POST':
         form = HabilidadForm(request.POST, instance=habilidad)
@@ -83,12 +76,10 @@ def editar_habilidad(request, pk):
         'habilidad': habilidad
     })
 
-
 def eliminar_habilidad(request, pk):
     """Eliminar una habilidad (Delete)."""
     if not request.session.get("user"):
-        return redirect("usuarios:login")
-    
+        return redirect(LOGIN_REDIRECT)
     habilidad = get_object_or_404(Habilidad, pk=pk)
     if request.method == 'POST':
         titulo = habilidad.titulo

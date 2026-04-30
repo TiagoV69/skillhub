@@ -17,10 +17,10 @@ class Habilidad(models.Model):
         related_name='habilidades',
     )
     titulo = models.CharField(max_length=150)
-    descripcion = models.TextField(blank=True, null=True)
-    categoria = models.CharField(max_length=80, blank=True, null=True)
+    descripcion = models.TextField(blank=True, default='')
+    categoria = models.CharField(max_length=80, blank=True, default='')
     nivel = models.CharField(max_length=20, choices=NIVEL_CHOICES, default='basico')
-    disponibilidad = models.CharField(max_length=100, blank=True, null=True)
+    disponibilidad = models.CharField(max_length=100, blank=True, default='')
     fecha_pub = models.DateTimeField(auto_now_add=True)
 
     class Meta:
