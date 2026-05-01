@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     # Apps del proyecto
     'usuarios',
     'habilidades',
+    'auditoria',
 ]
 
 MIDDLEWARE = [
@@ -95,3 +96,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH0_DOMAIN = os.environ.get("AUTH0_DOMAIN")
 AUTH0_CLIENT_ID = os.environ.get("AUTH0_CLIENT_ID")
 AUTH0_CLIENT_SECRET = os.environ.get("AUTH0_CLIENT_SECRET")
+
+# Apache Kafka - auditoria de eventos del aplicativo
+KAFKA_BOOTSTRAP_SERVERS = os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'localhost:9092')
+KAFKA_LOGS_TOPIC = os.getenv('KAFKA_LOGS_TOPIC', 'skillhub-logs')
+KAFKA_CONSUMER_GROUP_ID = os.getenv('KAFKA_CONSUMER_GROUP_ID', 'skillhub-log-consumers')
+KAFKA_PRODUCER_ENABLED = os.getenv('KAFKA_PRODUCER_ENABLED', 'True') == 'True'
+KAFKA_PRODUCER_FLUSH_TIMEOUT = int(os.getenv('KAFKA_PRODUCER_FLUSH_TIMEOUT', '3'))

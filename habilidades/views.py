@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from auditoria.kafka_producer import publicar_log_aplicativo
 from .models import Habilidad
 from .forms import HabilidadForm
 
@@ -47,6 +48,7 @@ def crear_habilidad(request):
         form = HabilidadForm(request.POST)
         if form.is_valid():
             habilidad = form.save()
+            publicar_log_habilidad_creada(habilidad)
             messages.success(request, f'Habilidad "{habilidad.titulo}" publicada exitosamente.')
             return redirect('habilidades:lista')
         else:
@@ -87,3 +89,22 @@ def eliminar_habilidad(request, pk):
         messages.success(request, f'Habilidad "{titulo}" eliminada.')
         return redirect('habilidades:lista')
     return render(request, 'habilidades/confirmar_eliminar.html', {'habilidad': habilidad})
+
+
+def publicar_log_habilidad_creada(habilidad):
+    """Publicar evento de auditoria para registrar la creacion de habilidades."""
+    publicar_log_aplicativo(
+        evento='habilidad_creada',
+        modulo='habilidades',
+        entidad='Habilidad',
+        entidad_id=habilidad.pk,
+        usuario_nombre=habilidad.id_usuario.nombre,
+        usuario_email=habilidad.id_usuario.email,
+        mensaje=f'Se publico la habilidad "{habilidad.titulo}".',
+        datos={
+            'titulo': habilidad.titulo,
+            'categoria': habilidad.categoria,
+            'nivel': habilidad.nivel,
+            'disponibilidad': habilidad.disponibilidad,
+        },
+    )
