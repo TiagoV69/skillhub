@@ -31,6 +31,12 @@ del codigo fuente:
 Los cambios se promueven entre ramas mediante Pull Requests en Azure DevOps, relacionando
 cada integracion con las Historias de Usuario y Tareas correspondientes.
 
+## Version estable
+
+La rama master representa la version estable del proyecto. Antes de llegar a esta rama,
+los cambios deben pasar por develop e integration, donde se revisan y validan mediante
+Pull Requests.
+
 ## Objetivo del proyecto
 
 El objetivo de SkillHub es aplicar conceptos de arquitectura de software, gestion de
