@@ -77,3 +77,46 @@ jobs:
         with:
           name: skillhub-staticfiles
           path: staticfiles/
+
+  deploy-package:
+    name: Deploy package
+    runs-on: ubuntu-latest
+    needs: build-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download static files artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: skillhub-staticfiles
+          path: deployment/staticfiles
+
+      - name: Prepare deployment package
+        run: |
+          mkdir -p deployment/app
+          rsync -av \
+            --exclude ".git" \
+            --exclude ".github" \
+            --exclude ".scannerwork" \
+            --exclude "venv" \
+            --exclude "__pycache__" \
+            --exclude "staticfiles" \
+            ./ deployment/app/
+          cat > deployment/DEPLOYMENT_INFO.txt <<EOF
+          Project: SkillHub
+          Branch: ${GITHUB_REF_NAME}
+          Commit: ${GITHUB_SHA}
+          Workflow run: ${GITHUB_RUN_ID}
+          Deployment type: packaged release artifact
+          EOF
+          cd deployment
+          zip -r skillhub-deploy-package.zip app staticfiles DEPLOYMENT_INFO.txt
+
+      - name: Upload deploy package
+        uses: actions/upload-artifact@v4
+        with:
+          name: skillhub-deploy-package
+          path: deployment/skillhub-deploy-package.zip

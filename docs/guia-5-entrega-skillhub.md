@@ -91,12 +91,15 @@ El archivo realiza las siguientes acciones:
 - Ejecuta `python manage.py migrate --noinput` para aplicar migraciones.
 - Ejecuta `python manage.py test --verbosity 2` para correr las pruebas automatizadas.
 - Ejecuta `python manage.py collectstatic --noinput` y publica los archivos estaticos como artefacto de entrega.
+- Despues de validar el proyecto, ejecuta la etapa `Deploy package`, que prepara un paquete de despliegue con el codigo de la aplicacion y los archivos estaticos generados.
+- Publica el paquete `skillhub-deploy-package` como artefacto descargable del workflow.
 
 Evidencia sugerida:
 
 - Captura del archivo `.github/workflows/ci.yml` en el repositorio.
 - Captura de la ejecucion del workflow en GitHub Actions.
-- Captura de los pasos completados correctamente.
+- Captura de los jobs `Build and test` y `Deploy package` completados correctamente.
+- Captura del artefacto `skillhub-deploy-package`.
 
 ## 3. Disparador del proceso CI/CD
 
@@ -113,7 +116,7 @@ on:
   workflow_dispatch:
 ```
 
-Esto garantiza que cada commit enviado directamente a `master`, o cada Pull Request dirigido a `master`, ejecute automaticamente el proceso de CI/CD.
+Esto garantiza que cada commit enviado directamente a `master`, o cada Pull Request dirigido a `master`, ejecute automaticamente el proceso de CI/CD. En el caso de `push` a `master`, despues de completar las validaciones se ejecuta la etapa de despliegue empaquetado.
 
 Para evidenciar los dos commits requeridos se recomienda:
 
@@ -126,7 +129,7 @@ Evidencia sugerida:
 
 - Captura del historial de commits mostrando los dos commits.
 - Captura de GitHub Actions mostrando dos ejecuciones del workflow.
-- Captura del detalle de una ejecucion exitosa.
+- Captura del detalle de una ejecucion exitosa, incluyendo los jobs `Build and test` y `Deploy package`.
 
 ## 4. Feedback y retrospectiva individual
 
